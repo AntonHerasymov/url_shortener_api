@@ -8,15 +8,15 @@ namespace url_shortener_api.Models
 	public class User
 	{
 		[Key]
-		public int id { get; set; }
+		public int Id { get; set; } 
 
-		public string name { get; set; }
+		public string Name { get; set; } = string.Empty;
 
-		public string password { get; set; }
+		public string Password { get; set; } = string.Empty;
 
-		public Role role { get; set; }
+		public Role Role { get; set; } = new Role();
 
 		[JsonIgnore]
-		public ICollection<URL> urls { get; set; }
+		public ICollection<URL> URLs { get; set; } = new List<URL>();
 	}
 }

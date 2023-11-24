@@ -1,8 +1,11 @@
-﻿namespace url_shortener_api.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace url_shortener_api.Models
 {
 	public class Role
-	{	
-		public int id { get; set; }
-		public string name { get; set; }
+	{
+		[Key]
+		public int Id { get; set; }
+		public string Name { get; set; } = string.Empty;
 	}
 }

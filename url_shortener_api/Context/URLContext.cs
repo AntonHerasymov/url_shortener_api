@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using url_shortener_api.Models;
+using url_shortener_api.Service;
 
 namespace url_shortener_api.Context
 {
@@ -27,15 +28,20 @@ namespace url_shortener_api.Context
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			base.OnModelCreating(modelBuilder);
+			modelBuilder.Entity<URL>(builder =>
+			{
+				builder.Property(s => s.Code).HasMaxLength(UrlShorteningService.NumberOfCharsInShortLink);
+
+				builder.HasIndex(s => s.Code).IsUnique();
+			});
 		}
 
 		private void EnsureRolesCreated()
 		{
 			if (!Roles.Any())
 			{
-				Roles.Add(new Role { name = "admin" });
-				Roles.Add(new Role { name = "user" });
+				Roles.Add(new Role { Name = "admin" });
+				Roles.Add(new Role { Name = "user" });
 				SaveChanges();
 			}
 		}

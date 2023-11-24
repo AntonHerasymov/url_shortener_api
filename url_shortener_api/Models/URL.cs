@@ -1,19 +1,30 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace url_shortener_api.Models
 {
 	public class URL
 	{
 		[Key]
-		public int id { get; set; }
+		public int Id { get; set; }
 
-		public string full_url { get; set; }
+		public string FullUrl { get; set; } = string.Empty;
 
-		public string short_url { get; set; }
+		public string ShortUrl { get; set; } = string.Empty;
 
-		public User created_by { get; set; }
+		
+		public string Code {  get; set; } = string.Empty;
 
-		public DateTime created_date { get; set; }
+		public User CreatedBy { get; set; } = new User();
+		public DateTime CreatedDate { get; set; } = DateTime.Now;
+	}
 
+	public class URLDto
+	{
+		public int Id { get; set; }
+		public string FullUrl { get; set; } = string.Empty;
+		public string ShortUrl { get; set; } = string.Empty;
+		public int UserId { get; set; }
+		public DateTime CreatedDate { get; set; }
 	}
 }
