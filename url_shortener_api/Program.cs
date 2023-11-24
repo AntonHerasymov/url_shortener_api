@@ -1,13 +1,31 @@
+using Microsoft.EntityFrameworkCore;
+using url_shortener_api.Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddDbContext<URLContext>(options =>
+	options.UseSqlServer(builder.Configuration.GetConnectionString("URLContext")));
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+	app.UseSwagger();
+	app.UseSwaggerUI();
+}
 
+app.UseCors(builder => builder
+   .SetIsOriginAllowed(_ => true)
+   .AllowAnyMethod()
+   .AllowAnyHeader()
+   .AllowCredentials());
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
