@@ -14,19 +14,15 @@ namespace url_shortener_api.Controllers
 	{
 		private readonly URLContext context;
 		private readonly UrlShorteningService urlShorteningService;
-		private readonly IHttpContextAccessor httpContextAccessor;
-
 
 		public URLController
 			(
 			URLContext context,
-			UrlShorteningService urlShorteningService,
-			IHttpContextAccessor httpContextAccessor
+			UrlShorteningService urlShorteningService
 			)
 		{
 			this.context = context;
 			this.urlShorteningService = urlShorteningService;
-			this.httpContextAccessor = httpContextAccessor;
 		}
 
 		[HttpGet("GetURLs")]
@@ -37,6 +33,7 @@ namespace url_shortener_api.Controllers
 			return Ok(urls);
 		}
 
+		[Authorize]
 		[HttpPost("AddNew")]
 		public async Task<ActionResult<URL>> AddNew([FromBody] URLDto newURL)
 		{
@@ -63,7 +60,7 @@ namespace url_shortener_api.Controllers
 			newURL.ShortUrl = shortUrl;
 
 
-			URL shortenedUrl = mapper.Map(newURL, user, code);
+			URL shortenedUrl = mapper.MapUrl(newURL, user, code);
 
 			await context.URLs.AddAsync(shortenedUrl);
 			await context.SaveChangesAsync();
