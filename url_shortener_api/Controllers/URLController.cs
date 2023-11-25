@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Net;
+using System.Security.Claims;
 using url_shortener_api.Context;
 using url_shortener_api.Models;
 using url_shortener_api.Service;
@@ -89,8 +90,6 @@ namespace url_shortener_api.Controllers
 					};
 			}
 
-		
-
 			bool isUrl = context.URLs.Any(x => x.FullUrl == newURL.fullUrl);
 
 			if (isUrl)
@@ -102,9 +101,11 @@ namespace url_shortener_api.Controllers
 
 			}
 
+			string userId = User.FindFirst("Id")?.Value;
+
 			User user = await context
 			.Users
-			.FirstOrDefaultAsync(x => x.Id == newURL.userId);
+			.FirstOrDefaultAsync(x => x.Id == Convert.ToInt32(userId));
 
 			URL shortenedUrl = await urlShorteningService.GenerateShortUrl(newURL, user);
 
