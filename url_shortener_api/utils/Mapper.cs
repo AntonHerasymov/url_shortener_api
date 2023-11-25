@@ -13,7 +13,7 @@ namespace url_shortener_api.utils
 				ShortUrl = urlDto.shortUrl,
 				Code = code,
 				CreatedBy = user,
-				CreatedDate = urlDto.createdDate,
+				CreatedDate = DateTime.Now,
 			};
 		}
 
