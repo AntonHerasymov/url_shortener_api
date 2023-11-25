@@ -43,6 +43,20 @@ namespace url_shortener_api.Controllers
 			return Ok(urls);
 		}
 
+		[HttpGet("GetFullUrl")]
+		public async Task<ActionResult<URL>> GetFullUrl(string shortUrl)
+		{
+			URL url = await context.URLs.FirstOrDefaultAsync(x => x.ShortUrl.Equals(shortUrl));
+
+			if(url == null)
+			{
+				return BadRequest("Unknow Url");
+			}
+
+			return Ok(url.FullUrl);
+		}
+
+		[Authorize]
 		[HttpGet("GetUrl")]
 		public async Task<ActionResult<URL>> GetUrlById(int urlId)
 		{
@@ -62,9 +76,11 @@ namespace url_shortener_api.Controllers
 			return Ok(url);
 		}
 
+		[Authorize]
 		[HttpPost("AddNew")]
 		public async Task<ActionResult<URL>> AddNew([FromBody] URLDto newURL)
 		{
+	
 			if (!Uri.TryCreate(newURL.fullUrl, UriKind.Absolute, out var url_))
 			{
 					return new ObjectResult(new { message = "Not a Url" })
@@ -73,17 +89,7 @@ namespace url_shortener_api.Controllers
 					};
 			}
 
-			User user = await context
-				.Users
-				.FirstOrDefaultAsync(x => x.Id == newURL.userId);
-
-			if (user == null)
-			{
-				return new ObjectResult(new { message = "Unauthorized" })
-				{
-					StatusCode = (int)HttpStatusCode.Unauthorized, // 401
-				};
-			}
+		
 
 			bool isUrl = context.URLs.Any(x => x.FullUrl == newURL.fullUrl);
 
@@ -95,6 +101,10 @@ namespace url_shortener_api.Controllers
 				};
 
 			}
+
+			User user = await context
+			.Users
+			.FirstOrDefaultAsync(x => x.Id == newURL.userId);
 
 			URL shortenedUrl = await urlShorteningService.GenerateShortUrl(newURL, user);
 
@@ -111,6 +121,7 @@ namespace url_shortener_api.Controllers
 			return CreatedAtAction(nameof(AddNew), new { id = shortenedUrl.Id }, urlToSend);
 		}
 
+		[Authorize]
 		[HttpDelete("Delete")]
 		public async Task<ActionResult> Delete([FromBody] int urlId)
 		{
