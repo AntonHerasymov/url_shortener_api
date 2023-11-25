@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using url_shortener_api.Context;
+using url_shortener_api.Models;
+using url_shortener_api.utils;
 
 namespace url_shortener_api.Service
 {
@@ -36,6 +38,24 @@ namespace url_shortener_api.Service
 					return code;
 				}
 			}
+		}
+
+		public async Task<URL> GenerateShortUrl(URLDto url,User user)
+		{
+			Mapper mapper = new Mapper();
+
+			string code = await GenerateUniqueCode();
+
+			Uri uri = new Uri(url.fullUrl);
+
+			string scheme = uri.Scheme;
+			string host = uri.Host;
+
+			string shortUrl = $"{scheme}://{host}/api/{code}";
+
+			url.shortUrl = shortUrl;
+
+			return mapper.MapUrl(url, user, code);
 		}
 	}
 }

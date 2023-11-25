@@ -30,7 +30,7 @@ namespace url_shortener_api.utils
 			var claims = new List<Claim>
 				{
 					new Claim("Id", Convert.ToString(user.Id)),
-					new Claim("Name", Convert.ToString(user.Name)),
+					new Claim("Name", Convert.ToString(user.Login)),
 					new Claim("Role", Convert.ToString(user.Role.Id))
 				};
 			ClaimsIdentity claimsIdentity =

@@ -8,12 +8,12 @@ namespace url_shortener_api.utils
 		{
 			return new URL
 			{
-				Id = urlDto.Id,
-				FullUrl = urlDto.FullUrl,
-				ShortUrl = urlDto.ShortUrl,
+				Id = urlDto.id,
+				FullUrl = urlDto.fullUrl,
+				ShortUrl = urlDto.shortUrl,
 				Code = code,
 				CreatedBy = user,
-				CreatedDate = urlDto.CreatedDate,
+				CreatedDate = urlDto.createdDate,
 			};
 		}
 
@@ -22,8 +22,8 @@ namespace url_shortener_api.utils
 			return new User
 			{
 				Id = userDto.Id,
-				Name = userDto.Name,
-				Password = userDto.Password,
+				Login = userDto.Login,
+				Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
 				Role = role,
 			};
 		}
